@@ -34,7 +34,7 @@ export class GraphQLModule implements IEasyExpressAttachableModule {
 
         for (const filename of filenames) {
           const entity = await import(path + filename);
-          typeDefs.push(Object.values(entity)[0] as T);
+          typeDefs.push(entity as T);
         }
 
         resolve(typeDefs);
