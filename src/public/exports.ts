@@ -1,1 +1,1 @@
-// export * from './EasyExpressServer';
+export * from './GraphQLModule';
