@@ -10,7 +10,7 @@
 
 > A module that attaches an ApolloServer to your Easy-Express Server!
 
-### 🏠 [Homepage](https://github.com/leonardparisi/easy-express-db#readme)
+### 🏠 [Homepage](https://github.com/easy-express/graphql#readme)
 
 ## Introduction
 
@@ -44,14 +44,10 @@ Coming soon...
 
 ## 🤝 Contributing
 
-Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/leonardparisi/easy-express-db/issues). You can also take a look at the [contributing guide](ssh://git@github.com:leonardparisi/easy-express-db/blob/master/CONTRIBUTING.md).
+Contributions, issues and feature requests are welcome!<br />Feel free to check [issues page](https://github.com/easy-express/graphql/issues). You can also take a look at the [contributing guide](https://github.com/easy-express/graphql/blob/master/CONTRIBUTING.md).
 
 ## Show your support
 
 Give a ⭐️ if this project helped you!
 
 Bitcoin Wallet Address: 3PjDkxNznkx7HVmVdfSMYgGJeeJzoDH7e6
-
----
-
-_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
