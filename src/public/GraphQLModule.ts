@@ -20,7 +20,7 @@ export class GraphQLModule implements IEasyExpressAttachableModule {
     const modules: GraphQLSchemaModule[] = await this.loadFiles<GraphQLSchemaModule>(this.pathToModules);
     this.server = new ApolloServer({ modules });
     this.server.applyMiddleware({ app: server.instance });
-    console.log('🚀 Apollo Server listening at /graphql !');
+    console.log('🚀 Apollo Server listening at /graphql');
   }
 
   private async loadFiles<T>(path: string): Promise<T[]> {
