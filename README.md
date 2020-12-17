@@ -1,4 +1,4 @@
-<h1 align="center">Welcome to Easy-Express's Database Module 👋</h1>
+<h1 align="center">Welcome to Easy-Express's GraphQL Module 👋</h1>
 <p>
   <a href="https://www.npmjs.com/package/@easy-express/graphql" target="_blank">
     <img alt="Version" src="https://img.shields.io/npm/v/@easy-express/graphql.svg">
@@ -24,15 +24,80 @@ npm install @easy-express/graphql
 
 ## Setup
 
-Coming soon...
+Create a new directory to hold all of your GraphQL modules. Each file in this directory should export `typeDefs` and `resolvers` like the example below:
+
+```ts
+import { gql } from 'apollo-server-express';
+import { Balances } from '../entities/Balances';
+import { getRepository } from 'typeorm';
+
+export const typeDefs = gql`
+  type Balance {
+    id: ID!
+    date: String!
+    balance: Float!
+  }
+
+  extend type Query {
+    get_all_balances: [Balance]
+  }
+
+  extend type Mutation {
+    insert_balance(id: ID!, date: String!, balance: Float!): Balance
+  }
+`;
+export const resolvers = {
+  Query: {
+    get_all_balances: async () => getRepository(Balances).find(),
+  },
+  Mutation: {
+    insert_balance: async (obj: any, args: any) => {
+      const balance = new Balances();
+      balance.date = args.date;
+      balance.balance = args.balance;
+      return getRepository(Balances).save(balance);
+    },
+  },
+};
+```
 
 ## Usage
 
-Coming soon...
+Create a new `GraphQLModule` and pass the path to the directory holding all your graphql modules. Then, simply attach the module to your `EasyExpressServer`. This will add the '/graphql' endpoint to your app.
 
 ### Example
 
-Coming soon...
+```ts
+import { EasyExpressServer } from '@easy-express/server';
+import { DatabaseModule } from '@easy-express/typeorm';
+import { GraphQLModule } from '@easy-express/graphql';
+import * as dotenv from 'dotenv';
+
+// load env vars from .env file
+dotenv.config();
+
+// create a new server
+let server = new EasyExpressServer();
+
+// define routes for your server...
+server.instance.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+// attach the modules
+server.attachModule(new GraphQLModule(__dirname + '/graphql-modules/')).then(() => {
+  server
+    .attachModule(new DatabaseModule(__dirname + '/entities/'))
+    .then(() => {
+      // Start the server after you've attached the two module
+      server.start();
+    })
+    .catch((e) => {
+      console.error(e);
+      return e;
+    });
+});
+```
 
 ## Author
 
