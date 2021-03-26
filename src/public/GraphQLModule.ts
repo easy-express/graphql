@@ -28,15 +28,15 @@ export class GraphQLModule implements IEasyExpressAttachableModule {
    *
    * @param server the EasyExpressServer that this module will be attached to
    */
-  public attachTo(server: EasyExpressServer, context? : (params:ExpressContext)=>object): Promise<unknown> {
-    return this.startServer(server,context);
+  public attachTo(server: EasyExpressServer, context?: (params: ExpressContext) => object): Promise<unknown> {
+    return this.startServer(server, context);
   }
 
   /**
    *
    * @param server the EasyExpressServer that this module will be attached to
    */
-  private async startServer(server: EasyExpressServer,context? : (params:ExpressContext)=>object) {
+  private async startServer(server: EasyExpressServer, context?: (params: ExpressContext) => object) {
     const modules: GraphQLSchemaModule[] = await this.loadFiles<GraphQLSchemaModule>(this.pathToModules);
     this.server = new ApolloServer({ modules, context });
     this.server.applyMiddleware({ app: server.instance });
