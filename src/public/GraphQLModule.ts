@@ -7,8 +7,8 @@ import fs from 'fs';
 import { URLSearchParams } from 'url';
 
 export type ApolloServerConfig = ApolloServerExpressConfig & {
-  cors:boolean | e.CorsOptions | e.CorsOptionsDelegate
-}
+  cors: boolean | e.CorsOptions | e.CorsOptionsDelegate;
+};
 
 /**
  * An EasyExpress module that adds an ApolloServer to one's express application.
@@ -41,7 +41,11 @@ export class GraphQLModule implements IEasyExpressAttachableModule {
    *
    * @param server the EasyExpressServer that this module will be attached to
    */
-  private async startServer(server: EasyExpressServer, config: ApolloServerExpressConfig, cors?: boolean | e.CorsOptions | e.CorsOptionsDelegate ) {
+  private async startServer(
+    server: EasyExpressServer,
+    config: ApolloServerExpressConfig,
+    cors?: boolean | e.CorsOptions | e.CorsOptionsDelegate,
+  ) {
     const modules: GraphQLSchemaModule[] = await this.loadFiles<GraphQLSchemaModule>(this.pathToModules);
     config.modules = modules;
     this.server = new ApolloServer(config);
