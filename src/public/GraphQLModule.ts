@@ -2,8 +2,13 @@ import { EasyExpressServer, IEasyExpressAttachableModule } from '@easy-express/s
 import { GraphQLSchemaModule } from 'apollo-server';
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerExpressConfig, ExpressContext } from 'apollo-server-express/dist/ApolloServer';
+import e from 'cors';
 import fs from 'fs';
 import { URLSearchParams } from 'url';
+
+export type ApolloServerConfig = ApolloServerExpressConfig & {
+  cors:boolean | e.CorsOptions | e.CorsOptionsDelegate
+}
 
 /**
  * An EasyExpress module that adds an ApolloServer to one's express application.
@@ -28,19 +33,19 @@ export class GraphQLModule implements IEasyExpressAttachableModule {
    *
    * @param server the EasyExpressServer that this module will be attached to
    */
-  public attachTo(server: EasyExpressServer, config?: ApolloServerExpressConfig): Promise<unknown> {
-    return this.startServer(server, config?config:{});
+  public attachTo(server: EasyExpressServer, config?: ApolloServerConfig): Promise<unknown> {
+    return this.startServer(server, config ? config : {}, config?.cors);
   }
 
   /**
    *
    * @param server the EasyExpressServer that this module will be attached to
    */
-  private async startServer(server: EasyExpressServer, config: ApolloServerExpressConfig) {
+  private async startServer(server: EasyExpressServer, config: ApolloServerExpressConfig, cors?: boolean | e.CorsOptions | e.CorsOptionsDelegate ) {
     const modules: GraphQLSchemaModule[] = await this.loadFiles<GraphQLSchemaModule>(this.pathToModules);
     config.modules = modules;
-    this.server = new ApolloServer( config );
-    this.server.applyMiddleware({ app: server.instance });
+    this.server = new ApolloServer(config);
+    this.server.applyMiddleware({ app: server.instance, cors });
     console.log('🚀 Apollo Server listening at /graphql');
   }
 
