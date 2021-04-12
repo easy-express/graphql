@@ -1,7 +1,7 @@
 import { EasyExpressServer, IEasyExpressAttachableModule } from '@easy-express/server';
 import { GraphQLSchemaModule } from 'apollo-server';
 import { ApolloServer } from 'apollo-server-express';
-import { ExpressContext } from 'apollo-server-express/dist/ApolloServer';
+import { ApolloServerExpressConfig, ExpressContext } from 'apollo-server-express/dist/ApolloServer';
 import fs from 'fs';
 import { URLSearchParams } from 'url';
 
@@ -28,17 +28,18 @@ export class GraphQLModule implements IEasyExpressAttachableModule {
    *
    * @param server the EasyExpressServer that this module will be attached to
    */
-  public attachTo(server: EasyExpressServer, context?: (params: ExpressContext) => object): Promise<unknown> {
-    return this.startServer(server, context);
+  public attachTo(server: EasyExpressServer, config?: ApolloServerExpressConfig): Promise<unknown> {
+    return this.startServer(server, config?config:{});
   }
 
   /**
    *
    * @param server the EasyExpressServer that this module will be attached to
    */
-  private async startServer(server: EasyExpressServer, context?: (params: ExpressContext) => object) {
+  private async startServer(server: EasyExpressServer, config: ApolloServerExpressConfig) {
     const modules: GraphQLSchemaModule[] = await this.loadFiles<GraphQLSchemaModule>(this.pathToModules);
-    this.server = new ApolloServer({ modules, context });
+    config.modules = modules;
+    this.server = new ApolloServer( config );
     this.server.applyMiddleware({ app: server.instance });
     console.log('🚀 Apollo Server listening at /graphql');
   }
