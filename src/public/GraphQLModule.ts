@@ -1,10 +1,9 @@
 import { EasyExpressServer, IEasyExpressAttachableModule } from '@easy-express/server';
 import { GraphQLSchemaModule } from 'apollo-server';
 import { ApolloServer } from 'apollo-server-express';
-import { ApolloServerExpressConfig, ExpressContext } from 'apollo-server-express/dist/ApolloServer';
+import { ApolloServerExpressConfig } from 'apollo-server-express/dist/ApolloServer';
 import e from 'cors';
-import fs from 'fs';
-import { URLSearchParams } from 'url';
+import * as glob from 'glob';
 
 export type ApolloServerConfig = ApolloServerExpressConfig & {
   cors: boolean | e.CorsOptions | e.CorsOptionsDelegate;
@@ -54,27 +53,12 @@ export class GraphQLModule implements IEasyExpressAttachableModule {
   }
 
   /**
-   * Loads all files inside the directory at the given path and returns
-   * the contents as a list of <T>.
+   * Loads files from a directory and returns them as a array of T.
+   * Supports glob patterns.
    *
-   * @param path path to a directory holding files of type T
+   * @param path path/glob to a directory containing files of type T 
    */
   private async loadFiles<T>(path: string): Promise<T[]> {
-    return new Promise((resolve, reject) => {
-      fs.readdir(path, async (err, filenames) => {
-        const typeDefs: T[] = [];
-
-        if (err) {
-          reject(err.message);
-        }
-
-        for (const filename of filenames) {
-          const entity = await import(path + filename);
-          typeDefs.push(entity as T);
-        }
-
-        resolve(typeDefs);
-      });
-    });
+    return Promise.all(glob.sync(path).map((file) => import(file))) as Promise<T[]>;
   }
 }
