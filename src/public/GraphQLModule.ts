@@ -56,7 +56,7 @@ export class GraphQLModule implements IEasyExpressAttachableModule {
    * Loads files from a directory and returns them as a array of T.
    * Supports glob patterns.
    *
-   * @param path path/glob to a directory containing files of type T 
+   * @param path path/glob to a directory containing files of type T
    */
   private async loadFiles<T>(path: string): Promise<T[]> {
     return Promise.all(glob.sync(path).map((file) => import(file))) as Promise<T[]>;
